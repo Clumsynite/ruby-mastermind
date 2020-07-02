@@ -1,5 +1,6 @@
 puts "Welcome to Mastermind by Clumsyknight"
 
+# Class to set player role 
 class Role
     def initialise
         @role = role
@@ -21,6 +22,13 @@ class Role
         end
     end
 
+    def get_role
+        @role
+    end
+end
+
+# Class to set code if role CodeMaker
+class CodeMaker
     def set_code
         puts "\nNow you need to set a code for the Codebreaker(bot) to guess in 12 turns"
         puts "\nIf the guess has the correct color in the correct poisition, it'll receive an X"
@@ -54,12 +62,13 @@ class Role
             end
         end
     end
+end
 
-    def get_role
-        @role
-    end
-
+# Class to set code automatically if role CodeBreaker
+class CodeBreaker
+    
 end
 
 r = Role.new
-r.set_code
+cm = CodeMaker.new
+cm.set_code
