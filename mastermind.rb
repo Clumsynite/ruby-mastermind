@@ -27,14 +27,32 @@ class Role
         puts "Else If the guess has the correct color in the wrong poisition, it'll receive an O"
         puts "Else the response will be blank "
         puts "\nCreate a four digit code from the following list of colors using the given values"
-        puts "   Red    -> r"
-        puts "   Blue   -> b"
-        puts "   Yellow -> y"
-        puts "   Green  -> g"
-        puts "   Orange -> o"
-        puts "   Black  -> b"
-        puts "   White  -> w"
-        
+        puts "   Red     ->  r"
+        puts "   Blue    ->  b"
+        puts "   Yellow  ->  y"
+        puts "   Green   ->  g"
+        puts "   Orange  ->  o"
+        puts "   violet  ->  v"
+        puts "   White   ->  w"
+        st = true
+        while st==true do  
+            print "\nEnter the code you created " 
+            code = gets.chomp!
+
+            if !code.match(/[^rgbyovw]/) 
+                if code.length==4
+                    puts "Valid Code"
+                    st = false
+                elsif code.length<4
+                    puts "Code uses less characters"
+                elsif code.length>4
+                    "Code uses more than required characters"
+                end
+            else
+                puts "Looks like you entered an unknown character"
+                next
+            end
+        end
     end
 
     def get_role
