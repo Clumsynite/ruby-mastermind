@@ -47,7 +47,7 @@ class CodeMaker
         st = true
         while st==true do  
             print "\nEnter the code you created " 
-            code = gets.chomp!
+            code = gets.chomp!.downcase
 
             if !code.match(/[^rgbyovw]/) 
                 if code.length==4
@@ -97,11 +97,25 @@ class CodeBreaker
 
     # Guess the code in 12 turns and provide a valid response 
     def guess_code
-        (1..12).each do |turn|
+        #(1..12).each do |turn|
             puts "\nYou'll have 12 turns to guess the color code set by me.\nNot So Good Luck jk"
-            puts "\nGuess #{turn}:"
-            guess = gets.chomp!
-        end
+            puts "\nGuess 1:"
+            puts get_code
+            guess = gets.chomp!.downcase
+            response = ""
+            guess.split("").each do |x| 
+                if get_code.split("").include?(x) and get_code.index(x)==guess.index(x)
+                    response += 'X'
+                    puts "#{x} #{guess.index(x)} #{get_code.index(x)}"
+                elsif get_code.split("").include?(x) and guess.index(x)!=get_code.index(x)
+                    response += 'O'
+                    puts "#{x} #{guess.index(x)} #{get_code.index(x)}"
+                else
+                    puts 'empty'
+                end
+            end
+            puts response
+        #end
     end
 
     # get random code
@@ -113,4 +127,5 @@ end
 r = Role.new
 cm = CodeMaker.new
 cb = CodeBreaker.new
+cb.set_code
 cb.guess_code
