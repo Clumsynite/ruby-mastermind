@@ -95,6 +95,15 @@ class CodeBreaker
         @code = code
     end
 
+    # Guess the code in 12 turns and provide a valid response 
+    def guess_code
+        (1..12).each do |turn|
+            puts "\nYou'll have 12 turns to guess the color code set by me.\nNot So Good Luck jk"
+            puts "\nGuess #{turn}:"
+            guess = gets.chomp!
+        end
+    end
+
     # get random code
     def get_code
         @code
@@ -104,3 +113,4 @@ end
 r = Role.new
 cm = CodeMaker.new
 cb = CodeBreaker.new
+cb.guess_code
