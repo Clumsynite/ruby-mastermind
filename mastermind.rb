@@ -22,9 +22,19 @@ class Role
     end
 
     def set_code
-        puts "\nNow you need to set a code for the Codebreaker(bot) to guess"
-        puts "Select a code from the foll"
-
+        puts "\nNow you need to set a code for the Codebreaker(bot) to guess in 12 turns"
+        puts "\nIf the guess has the correct color in the correct poisition, it'll receive an X"
+        puts "Else If the guess has the correct color in the wrong poisition, it'll receive an O"
+        puts "Else the response will be blank "
+        puts "\nCreate a four digit code from the following list of colors using the given values"
+        puts "   Red    -> r"
+        puts "   Blue   -> b"
+        puts "   Yellow -> y"
+        puts "   Green  -> g"
+        puts "   Orange -> o"
+        puts "   Black  -> b"
+        puts "   White  -> w"
+        
     end
 
     def get_role
@@ -34,3 +44,4 @@ class Role
 end
 
 r = Role.new
+r.set_code
