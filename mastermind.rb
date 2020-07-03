@@ -2,7 +2,13 @@
 
 # Class to set player role
 class Role
-  # Set role when game starts
+  attr_reader :role
+
+  def initialize
+    @role = :role
+  end
+
+  # Set role when game $starts
   def set_role
     puts "\nPlease select your role out of the given options(1,2): \n    1. CodeMaker \n    2. CodeBreaker"
     role = gets.chomp!.to_i
@@ -17,33 +23,34 @@ class Role
     end
   end
 
-  # Generate a random code 
+  # Generate a random code
   def random_code
-    code = "";arr = [];
-    (1..4).each{arr.push(rand(1..7))}
+    code = ''
+    arr = []
+    4.times { arr.push(rand(1..7)) }
     arr.each do |x|
-      case x
-        when 1 then code+='r'
-        when 2 then code+='b'
-        when 3 then code+='y'
-        when 4 then code+='g'
-        when 5 then code+='o'
-        when 6 then code+='b'
-        when 7 then code+='w'
-      end
-    end;code;
+      code += replace_array_value_to_char(x)
+    end
+    code
   end
 
-  # get role (whether codebreaker or codemaker)
-  def get_role
-    @role
+  def replace_array_value_to_char(char)
+    case char
+    when 1 then 'r'
+    when 2 then 'b'
+    when 3 then 'y'
+    when 4 then 'g'
+    when 5 then 'o'
+    when 6 then 'v'
+    else 'w'
+    end
   end
 end
 
 # Class to set code if role CodeMaker
 class CodeMaker
-  @code = ""
-
+  @code = ''
+  $st = true
   def initialize
     @role = Role.new
   end
@@ -58,11 +65,10 @@ class CodeMaker
   end
 
   def code_validation
-    st = true
-    while st==true do  
+    while $st==true do  
       print "\nEnter the code you created " 
       code = gets.chomp!.downcase
-      if !code.match(/[^rgbyovw]/) 
+      if !code.match(/[^rgbyvow]/) 
         code_in_size(code)
       else
         puts "Looks like you entered an unknown character"
@@ -75,7 +81,7 @@ class CodeMaker
     if code.length==4
       puts "Valid Code"
       @code = code
-      st = false
+    $st = false
     elsif code.length<4
       puts "Code uses less characters"
     elsif code.length>4
@@ -98,9 +104,9 @@ class CodeMaker
             print "\nMy guess #{turn}:    "
             guess = @role.random_code
             puts guess
-            response = ""
-            gc = get_code.split("")
-            g = guess.split("")
+            response = ''
+            gc = get_code.split('')
+            g = guess.split('')
             for i in 0..3 do 
               if g[i]==gc[i]
                 response += 'X'
@@ -108,7 +114,7 @@ class CodeMaker
                 response += 'O'
               end
             end
-            puts "Response: #{response.split("").shuffle.join("")}"
+            puts "Response: #{response.split('').shuffle.join('')}"
             if response=='XXXX'
               puts "\nWoohoo! I lost\nCongratulations! for a sweet win"
               throw :guessed
@@ -127,7 +133,7 @@ end
 
 # Class to set code automatically if role CodeBreaker
 class CodeBreaker 
-  @code = ""
+  @code = ''
 
   def initialize
     @role = Role.new
@@ -147,9 +153,9 @@ class CodeBreaker
         print "\nGuess #{turn}:    "
         #print "#{get_code} "
         guess = gets.chomp!.downcase
-        response = ""
-        gc = get_code.split("")
-        g = guess.split("")
+        response = ''
+        gc = get_code.split('')
+        g = guess.split('')
         for i in 0..3 do 
           if g[i]==gc[i]
             response += 'X'
@@ -157,7 +163,7 @@ class CodeBreaker
             response += 'O'
           end
         end
-        puts "Response: #{response.split("").shuffle.join("")}"
+        puts "Response: #{response.split('').shuffle.join('')}"
         if response=='XXXX'
           puts "\nCongratulations! I Lost\nThe code was #{get_code}"
           throw :guessed
@@ -186,10 +192,10 @@ class Game
   def start
     puts "Welcome to Mastermind by Clumsyknight"
     @role.set_role
-    if @role.get_role == 'CodeMaker'
+    if @role.role == 'CodeMaker'
       @maker.set_code
       @maker.guess_code
-    elsif @role.get_role == 'CodeBreaker'
+    elsif @role.role == 'CodeBreaker'
       @breaker.set_code
       @breaker.guess_code 
     end
@@ -198,6 +204,3 @@ end
 
 # game = Game.new
 # game.start
-
-r = Role.new
-puts r.random_code
