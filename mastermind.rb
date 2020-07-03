@@ -53,8 +53,8 @@ class CodeMaker
     # Set code with error handling for human player
     def set_code
         puts "\nNow you need to set a code for the Codebreaker(me) to guess in 12 turns"
-        puts "\nIf your guess has the correct color in the correct poisition, I'll give it an X"
-        puts "Else If the guess has the correct color in the wrong poisition, I'll give it an O"
+        puts "\nIf your guess has the correct color in the correct position, I'll give it an X"
+        puts "Else If the guess has the correct color in the wrong position, I'll give it an O"
         puts "Else the response will be blank "
         puts "\nCreate a four digit code from the following list of colors using the given values"
         puts "   Red     ->  r"
