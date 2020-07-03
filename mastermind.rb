@@ -79,7 +79,7 @@ class CodeBreaker
     def set_code 
         arr = []
         code = ""
-        puts "\nYou have chosen to be the new CodeBreaker!\nNow wait for me to create a code in order to crack"
+        puts "\nYou have chosen to be the new CodeBreaker!\nNow wait for me to create a code for you to crack "
         (1..4).each{arr.push(rand(1..7))}
         arr.each do |x|
             case x
@@ -97,10 +97,11 @@ class CodeBreaker
 
     # Guess the code in 12 turns and provide a valid response | If response == "XXXX" you win else next turn
     def guess_code
-            puts "\nYou'll have 12 turns to guess the color code set by me.\nNot So Good Luck jk"
+        puts "\nYou'll have 12 turns to guess the color code set by me.\nNot So Good Luck jk\nOptions: r,b,y,g,o,w,v"
+        catch (:guessed) do
             (1..12).each do |turn|
                 print "\nGuess #{turn}:    "
-                print get_code
+                #print "#{get_code} "
                 guess = gets.chomp!.downcase
                 response = ""
                 gc = get_code.split("")
@@ -113,8 +114,17 @@ class CodeBreaker
                         response += 'O'
                     end
                 end
-                print response
+                print response.split("").shuffle.join("")
+                
+                if response=='XXXX'
+                    puts "\nCongratulations! I Lost"
+                    throw :guessed
+                elsif response!='XXXX' and turn==12
+                    puts "\nBoohoo! I won"
+                    throw :guessed
+                end
             end
+        end
     end
 
     # get random code
