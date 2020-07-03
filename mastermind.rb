@@ -95,27 +95,26 @@ class CodeBreaker
         @code = code
     end
 
-    # Guess the code in 12 turns and provide a valid response 
+    # Guess the code in 12 turns and provide a valid response | If response == "XXXX" you win else next turn
     def guess_code
-        #(1..12).each do |turn|
             puts "\nYou'll have 12 turns to guess the color code set by me.\nNot So Good Luck jk"
-            puts "\nGuess 1:"
-            puts get_code
-            guess = gets.chomp!.downcase
-            response = ""
-            guess.split("").each do |x| 
-                if get_code.split("").include?(x) and get_code.index(x)==guess.index(x)
-                    response += 'X'
-                    puts "#{x} #{guess.index(x)} #{get_code.index(x)}"
-                elsif get_code.split("").include?(x) and guess.index(x)!=get_code.index(x)
-                    response += 'O'
-                    puts "#{x} #{guess.index(x)} #{get_code.index(x)}"
-                else
-                    puts 'empty'
+            (1..12).each do |turn|
+                print "\nGuess #{turn}:    "
+                print get_code
+                guess = gets.chomp!.downcase
+                response = ""
+                gc = get_code.split("")
+                g = guess.split("")
+
+                for i in 0..3 do 
+                    if g[i]==gc[i]
+                        response += 'X'
+                    elsif gc.include?(g[i]) 
+                        response += 'O'
+                    end
                 end
+                print response
             end
-            puts response
-        #end
     end
 
     # get random code
