@@ -66,6 +66,11 @@ class CodeMaker
         end
     end
 
+    # guess code randomly in 12 turns 
+    def guess_code
+        
+    end
+
     def get_code
         @code
     end
@@ -114,13 +119,13 @@ class CodeBreaker
                         response += 'O'
                     end
                 end
-                print response.split("").shuffle.join("")
+                puts "Response: #{response.split("").shuffle.join("")}"
                 
                 if response=='XXXX'
-                    puts "\nCongratulations! I Lost"
+                    puts "\nCongratulations! I Lost\nTHe code was #{get_code}"
                     throw :guessed
                 elsif response!='XXXX' and turn==12
-                    puts "\nBoohoo! I won"
+                    puts "\nBoohoo! I won\nTHe code was #{get_code}"
                     throw :guessed
                 end
             end
@@ -136,5 +141,5 @@ end
 r = Role.new
 cm = CodeMaker.new
 cb = CodeBreaker.new
-cb.set_code
-cb.guess_code
+cm.set_code
+cm.guess_code
