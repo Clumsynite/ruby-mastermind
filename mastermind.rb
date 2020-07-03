@@ -19,8 +19,7 @@ class Role
 
   # Generate a random code 
   def random_code
-    code = ""
-    arr = []
+    code = "";arr = [];
     (1..4).each{arr.push(rand(1..7))}
     arr.each do |x|
       case x
@@ -32,8 +31,7 @@ class Role
         when 6 then code+='b'
         when 7 then code+='w'
       end
-    end
-    code
+    end;code;
   end
 
   # get role (whether codebreaker or codemaker)
@@ -58,28 +56,37 @@ class CodeMaker
     puts "   Red     ->  r\n   Blue    ->  b\n   Yellow  ->  y\n   Green   ->  g"
     puts "   Orange  ->  o\n   violet  ->  v\n   White   ->  w"
   end
-  # Set code with error handling for human player
-  def set_code
-    codemaker_rules
+
+  def code_validation
     st = true
     while st==true do  
       print "\nEnter the code you created " 
       code = gets.chomp!.downcase
       if !code.match(/[^rgbyovw]/) 
-        if code.length==4
-          puts "Valid Code"
-          @code = code
-          st = false
-        elsif code.length<4
-          puts "Code uses less characters"
-        elsif code.length>4
-          "Code uses more than required characters"
-        end
+        code_in_size(code)
       else
         puts "Looks like you entered an unknown character"
         next
       end
     end
+  end
+  
+  def code_in_size(code)
+    if code.length==4
+      puts "Valid Code"
+      @code = code
+      st = false
+    elsif code.length<4
+      puts "Code uses less characters"
+    elsif code.length>4
+      puts "Code uses more than required characters"
+    end
+  end
+
+  # Set code with error handling for human player
+  def set_code
+    codemaker_rules
+    code_validation
   end
 
   # guess code randomly in 12 turns 
@@ -189,5 +196,8 @@ class Game
   end
 end
 
-game = Game.new
-game.start
+# game = Game.new
+# game.start
+
+r = Role.new
+puts r.random_code
