@@ -49,10 +49,11 @@ end
 
 # Class to set code if role CodeMaker
 class CodeMaker
-  @code = ''
+  attr_reader :code
   def initialize
     @role = Role.new
     @st = true
+    @code = :code
   end
 
   def codemaker_rules
@@ -101,56 +102,54 @@ class CodeMaker
     puts "\nI have 12 turns to guess the color code that you have set.\nLet's see whether I can do it or not"
     catch(:guessed) do
       (1..12).each do |turn|
-        sleep(rand(1..2))
+        sleep(rand(1..8))
         print "\nMy guess #{turn}:    "
         guess = @role.random_code
         puts guess
-        response = validate_guess(guess.split(''), get_code.split(''))
-        puts "Response: #{response}"
-        validate_response(response, turn)
+        validate_response(guess, turn)
       end
-    end 
+    end
   end
 
-  def validate_guess(guess, get_code)
+  def validate_guess(guess, code)
     response = ''
     (0..3).each do |i|
-      if guess[i] == get_code[i]
+      if guess[i] == code[i]
         response += 'X'
-      elsif get_code.include?(guess[i])
+      elsif code.include?(guess[i])
         response += 'O'
       end
     end
     response
   end
 
-  def validate_response(response, turn)
+  def validate_response(guess, turn)
+    response = validate_guess(guess.split(''), code.split(''))
+    puts "Response: #{response}"
     if response == 'XXXX'
       puts "\nWoohoo! I lost\nCongratulations! for a sweet win"
       throw :guessed
     elsif response != 'XXXX' && turn == 12
-      puts "\nCongratulations! You won\nThe code was #{get_code}\nI'll try to win next time we play"
+      puts "\nCongratulations! You won\nThe code was #{code}\nI'll try to win next time we play"
       throw :guessed
     end
-  end
-
-  def get_code
-    @code
   end
 end
 
 # Class to set code automatically if role CodeBreaker
-class CodeBreaker 
-  @code = ''
+class CodeBreaker
+  attr_reader :code
 
   def initialize
     @role = Role.new
+    @code = :code
+    @code_maker = CodeMaker.new
   end
-  
-  # Set code automatically by converting random numbers to characters  
-  def set_code 
+
+  # Set code automatically by converting random numbers to characters
+  def set_code
     puts "\nYou have chosen to be the new CodeBreaker!\nNow wait for me to create a code for you to crack "
-    @code =  @role.random_code
+    @code = @role.random_code
   end
 
   # Guess the code in 12 turns and provide a valid response | If response == "XXXX" you win else next turn
@@ -159,10 +158,10 @@ class CodeBreaker
     catch(:guessed) do
       (1..12).each do |turn|
         print "\nGuess #{turn}:    "
-        #print "#{get_code} "
+        #print "#{code} "
         guess = gets.chomp!.downcase
         response = ''
-        gc = get_code.split('')
+        gc = code.split('')
         g = guess.split('')
         for i in 0..3 do 
           if g[i]==gc[i]
@@ -173,19 +172,14 @@ class CodeBreaker
         end
         puts "Response: #{response.split('').shuffle.join('')}"
         if response=='XXXX'
-          puts "\nCongratulations! I Lost\nThe code was #{get_code}"
+          puts "\nCongratulations! I Lost\nThe code was #{code}"
           throw :guessed
         elsif response!='XXXX' and turn==12
-          puts "\nBoohoo! I won\nTHe code was #{get_code}"
+          puts "\nBoohoo! I won\nTHe code was #{code}"
           throw :guessed
         end
       end
     end
-  end
-
-  # get random code
-  def get_code
-      @code
   end
 end
 
@@ -214,5 +208,5 @@ end
 # game.start
 cm = CodeMaker.new
 cm.set_code
-puts cm.get_code
+puts cm.code
 cm.guess_code
