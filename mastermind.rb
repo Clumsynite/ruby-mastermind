@@ -10,7 +10,7 @@ class Role
 
   # Set role when game @starts
   def set_role
-    puts "\nPlease select your role out of the given options(1,2): \n    1. CodeMaker \n    2. CodeBreaker"
+    puts "\nPlease select an options(1,2,3): \n    1. Role: CodeMaker \n    2. Role: CodeBreaker\n    3. Quit Game"
     role = gets.chomp!.to_i
     if role == 1
       puts "\nYou have selected CodeMaker"
@@ -18,6 +18,8 @@ class Role
       # set_code
     elsif role == 2
       @role = 'CodeBreaker'
+    elsif role == 3
+      @role = 'exit'
     else
       puts "\nLooks like you have selected something else. Try to enter 1 or 2 to select a role"
     end
@@ -101,7 +103,7 @@ class CodeMaker
     puts "\nI have 12 turns to guess the color code that you have set.\nLet's see whether I can do it or not"
     catch(:guessed) do
       (1..12).each do |turn|
-        sleep(rand(1..2))
+        sleep(rand(1..8))
         print "\nMy guess #{turn}:    "
         guess = @role.random_code
         puts guess
@@ -121,16 +123,11 @@ class CodeMaker
         response += 'O'
       end
     end
-    response = respone.split('').shuffle.join('')
+    response = response.split('').shuffle.join('')
   end
 
-<<<<<<< HEAD
   def validate_response(guess, turn)
-    response = validate_guess(guess.split(''), code.to_s.split(''))
-    puts "Response: #{response}"
-=======
-  def validate_response(response, turn)
->>>>>>> parent of 4b85670... CodeMaker refactored
+    response = validate_guess(guess.split(''), get_code.to_s.split(''))
     if response == 'XXXX'
       puts "\nWoohoo! I lost\nCongratulations! for a sweet win"
       throw :guessed
@@ -151,12 +148,6 @@ class CodeBreaker
 
   def initialize
     @role = Role.new
-<<<<<<< HEAD
-    @code = :code
-    @code_maker = CodeMaker.new
-    @st = true
-=======
->>>>>>> parent of 4b85670... CodeMaker refactored
   end
   
   # Set code automatically by converting random numbers to characters  
@@ -171,47 +162,6 @@ class CodeBreaker
     catch(:guessed) do
       guess = ''
       (1..12).each do |turn|
-<<<<<<< HEAD
-        guess = validate_guess_code(turn)
-        puts "#{guess} #{turn}"
-        @st=true if !@st
-        validate_response(guess, turn)
-      end
-    end
-  end
-
-  def validate_guess_code(turn)
-    while @st == true
-      print "\nGuess #{turn}:    "
-      guess = gets.chomp!.downcase
-      if !guess.match(/[^rgbyvow]/)
-        code_in_size(guess)
-        return guess
-      else
-        puts 'Looks like you entered an unknown character'
-        next
-      end
-    end
-  end
-
-  def code_in_size(code)
-    if code.length == 4
-      @st = false
-    elsif code.length < 4
-      puts 'Code uses less characters'
-    elsif code.length > 4
-      puts 'Code uses more than required characters'
-    end
-  end
-
-  def validate_guess(guess, code)
-    response = ''
-    (0..3).each do |i|
-      if guess[i] == code[i]
-        response += 'X'
-      elsif code.include?(guess[i])
-        response += 'O'
-=======
         print "\nGuess #{turn}:    "
         #print "#{get_code} "
         guess = gets.chomp!.downcase
@@ -233,28 +183,25 @@ class CodeBreaker
           puts "\nBoohoo! I won\nTHe code was #{get_code}"
           throw :guessed
         end
->>>>>>> parent of 4b85670... CodeMaker refactored
       end
     end
-    response
   end
 
   def validate_response(guess, turn)
     puts "#{guess} #{turn}"
-    response = validate_guess(guess.split(''), code.to_s.split(''))
+    response = validate_guess(guess.split(''), get_code.to_s.split(''))
     puts "Response: #{response}"
     if response == 'XXXX'
       puts "\nWoohoo! I lost\nCongratulations! for a sweet win"
       throw :guessed
     elsif response != 'XXXX' && turn == 12
-      puts "\nCongratulations! You won\nThe code was #{code}\nI'll try to win next time we play"
+      puts "\nCongratulations! You won\nThe code was #{get_code}\nI'll try to win next time we play"
       throw :guessed
     end
   end
 
-  # get random code
   def get_code
-      @code
+    @code
   end
 end
 
@@ -264,36 +211,28 @@ class Game
     @role = Role.new
     @maker = CodeMaker.new
     @breaker = CodeBreaker.new
+    @selected = false
   end
 
   def start
-    puts "Welcome to Mastermind by Clumsyknight"
-    @role.set_role
-    if @role.role == 'CodeMaker'
-      @maker.set_code
-      @maker.guess_code
-    elsif @role.role == 'CodeBreaker'
-      @breaker.set_code
-      @breaker.guess_code 
+    puts 'Welcome to Mastermind by Clumsyknight'
+    until @selected==true do
+      @role.set_role
+      if @role.role == 'CodeMaker'
+        @maker.set_code 
+        @maker.guess_code 
+        break
+      elsif @role.role == 'CodeBreaker'
+        @breaker.set_code
+        @breaker.guess_code
+        break
+      elsif @role.role == 'exit'
+        puts 'Bye Bye'
+        break
+      end
     end
   end
 end
 
-# game = Game.new
-# game.start
-<<<<<<< HEAD
-
-# cm = CodeMaker.new
-# cm.set_code
-# puts cm.code
-# cm.guess_code
-
-cb = CodeBreaker.new
-cb.set_code
-cb.guess_code
-=======
-cm = CodeMaker.new
-cm.set_code
-puts cm.get_code
-cm.guess_code
->>>>>>> parent of 4b85670... CodeMaker refactored
+game = Game.new
+game.start
