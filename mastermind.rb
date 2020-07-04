@@ -120,11 +120,11 @@ class CodeMaker
         response += 'O'
       end
     end
-    response
+    response = respone.split('').shuffle.join('')
   end
 
   def validate_response(guess, turn)
-    response = validate_guess(guess.split(''), code.split(''))
+    response = validate_guess(guess.split(''), code.to_s.split(''))
     puts "Response: #{response}"
     if response == 'XXXX'
       puts "\nWoohoo! I lost\nCongratulations! for a sweet win"
@@ -144,6 +144,7 @@ class CodeBreaker
     @role = Role.new
     @code = :code
     @code_maker = CodeMaker.new
+    @st = true
   end
 
   # Set code automatically by converting random numbers to characters
@@ -156,29 +157,62 @@ class CodeBreaker
   def guess_code
     puts "\nYou'll have 12 turns to guess the color code set by me.\nNot So Good Luck jk\nOptions: r,b,y,g,o,w,v"
     catch(:guessed) do
+      guess = ''
       (1..12).each do |turn|
-        print "\nGuess #{turn}:    "
-        #print "#{code} "
-        guess = gets.chomp!.downcase
-        response = ''
-        gc = code.split('')
-        g = guess.split('')
-        for i in 0..3 do 
-          if g[i]==gc[i]
-            response += 'X'
-          elsif gc.include?(g[i]) 
-            response += 'O'
-          end
-        end
-        puts "Response: #{response.split('').shuffle.join('')}"
-        if response=='XXXX'
-          puts "\nCongratulations! I Lost\nThe code was #{code}"
-          throw :guessed
-        elsif response!='XXXX' and turn==12
-          puts "\nBoohoo! I won\nTHe code was #{code}"
-          throw :guessed
-        end
+        guess = validate_guess_code(turn)
+        puts "#{guess} #{turn}"
+        @st=true if !@st
+        validate_response(guess, turn)
       end
+    end
+  end
+
+  def validate_guess_code(turn)
+    while @st == true
+      print "\nGuess #{turn}:    "
+      guess = gets.chomp!.downcase
+      if !guess.match(/[^rgbyvow]/)
+        code_in_size(guess)
+        return guess
+      else
+        puts 'Looks like you entered an unknown character'
+        next
+      end
+    end
+  end
+
+  def code_in_size(code)
+    if code.length == 4
+      @st = false
+    elsif code.length < 4
+      puts 'Code uses less characters'
+    elsif code.length > 4
+      puts 'Code uses more than required characters'
+    end
+  end
+
+  def validate_guess(guess, code)
+    response = ''
+    (0..3).each do |i|
+      if guess[i] == code[i]
+        response += 'X'
+      elsif code.include?(guess[i])
+        response += 'O'
+      end
+    end
+    response
+  end
+
+  def validate_response(guess, turn)
+    puts "#{guess} #{turn}"
+    response = validate_guess(guess.split(''), code.to_s.split(''))
+    puts "Response: #{response}"
+    if response == 'XXXX'
+      puts "\nWoohoo! I lost\nCongratulations! for a sweet win"
+      throw :guessed
+    elsif response != 'XXXX' && turn == 12
+      puts "\nCongratulations! You won\nThe code was #{code}\nI'll try to win next time we play"
+      throw :guessed
     end
   end
 end
@@ -206,7 +240,12 @@ end
 
 # game = Game.new
 # game.start
-cm = CodeMaker.new
-cm.set_code
-puts cm.code
-cm.guess_code
+
+# cm = CodeMaker.new
+# cm.set_code
+# puts cm.code
+# cm.guess_code
+
+cb = CodeBreaker.new
+cb.set_code
+cb.guess_code
