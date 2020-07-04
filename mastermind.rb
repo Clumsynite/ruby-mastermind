@@ -98,33 +98,40 @@ class CodeMaker
 
   # guess code randomly in 12 turns
   def guess_code
-      puts "\nI have 12 turns to guess the color code that you have set.\nLet's see whether I can do it or not"
-      catch(:guessed) do
-        (1..12).each do |turn|
-            sleep(rand(1..10))
-            print "\nMy guess #{turn}:    "
-            guess = @role.random_code
-            puts guess
-            response = ''
-            gc = get_code.split('')
-            g = guess.split('')
-            for i in 0..3 do 
-              if g[i]==gc[i]
-                response += 'X'
-              elsif gc.include?(g[i]) 
-                response += 'O'
-              end
-            end
-            puts "Response: #{response.split('').shuffle.join('')}"
-            if response=='XXXX'
-              puts "\nWoohoo! I lost\nCongratulations! for a sweet win"
-              throw :guessed
-            elsif response!='XXXX' and turn==12
-              puts "\nCongratulations! You won\nThe code was #{get_code}\nI'll try to win next time we play"
-              throw :guessed
-            end
-          end
-      end 
+    puts "\nI have 12 turns to guess the color code that you have set.\nLet's see whether I can do it or not"
+    catch(:guessed) do
+      (1..12).each do |turn|
+        sleep(rand(1..2))
+        print "\nMy guess #{turn}:    "
+        guess = @role.random_code
+        puts guess
+        response = validate_guess(guess.split(''), get_code.split(''))
+        puts "Response: #{response}"
+        validate_response(response, turn)
+      end
+    end 
+  end
+
+  def validate_guess(guess, get_code)
+    response = ''
+    (0..3).each do |i|
+      if guess[i] == get_code[i]
+        response += 'X'
+      elsif get_code.include?(guess[i])
+        response += 'O'
+      end
+    end
+    response
+  end
+
+  def validate_response(response, turn)
+    if response == 'XXXX'
+      puts "\nWoohoo! I lost\nCongratulations! for a sweet win"
+      throw :guessed
+    elsif response != 'XXXX' && turn == 12
+      puts "\nCongratulations! You won\nThe code was #{get_code}\nI'll try to win next time we play"
+      throw :guessed
+    end
   end
 
   def get_code
@@ -208,3 +215,4 @@ end
 cm = CodeMaker.new
 cm.set_code
 puts cm.get_code
+cm.guess_code
