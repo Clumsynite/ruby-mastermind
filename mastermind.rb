@@ -8,7 +8,7 @@ class Role
     @role = :role
   end
 
-  # Set role when game $starts
+  # Set role when game @starts
   def set_role
     puts "\nPlease select your role out of the given options(1,2): \n    1. CodeMaker \n    2. CodeBreaker"
     role = gets.chomp!.to_i
@@ -50,42 +50,43 @@ end
 # Class to set code if role CodeMaker
 class CodeMaker
   @code = ''
-  $st = true
   def initialize
     @role = Role.new
+    @st = true
   end
 
   def codemaker_rules
     puts "\nNow you need to set a code for the Codebreaker(me) to guess in 12 turns"
     puts "\nIf your guess has the correct color in the correct position, I'll give it an X"
-    puts "Else If the guess has the correct color in the wrong position, I'll give it an O\nElse the response will be blank "
+    puts "Else If the guess has the correct color in the wrong position, I'll give it an O"
+    puts 'Else the response will be blank'
     puts "\nCreate a four digit code from the following list of colors using the given values"
     puts "   Red     ->  r\n   Blue    ->  b\n   Yellow  ->  y\n   Green   ->  g"
     puts "   Orange  ->  o\n   violet  ->  v\n   White   ->  w"
   end
 
   def code_validation
-    while $st==true do  
-      print "\nEnter the code you created " 
+    while @st == true
+      print "\nEnter the code you created "
       code = gets.chomp!.downcase
-      if !code.match(/[^rgbyvow]/) 
+      if !code.match(/[^rgbyvow]/)
         code_in_size(code)
       else
-        puts "Looks like you entered an unknown character"
+        puts 'Looks like you entered an unknown character'
         next
       end
     end
   end
-  
+
   def code_in_size(code)
-    if code.length==4
-      puts "Valid Code"
+    if code.length == 4
+      puts 'Valid Code'
       @code = code
-    $st = false
-    elsif code.length<4
-      puts "Code uses less characters"
-    elsif code.length>4
-      puts "Code uses more than required characters"
+      @st = false
+    elsif code.length < 4
+      puts 'Code uses less characters'
+    elsif code.length > 4
+      puts 'Code uses more than required characters'
     end
   end
 
@@ -95,7 +96,7 @@ class CodeMaker
     code_validation
   end
 
-  # guess code randomly in 12 turns 
+  # guess code randomly in 12 turns
   def guess_code
       puts "\nI have 12 turns to guess the color code that you have set.\nLet's see whether I can do it or not"
       catch(:guessed) do
@@ -204,3 +205,6 @@ end
 
 # game = Game.new
 # game.start
+cm = CodeMaker.new
+cm.set_code
+puts cm.get_code
